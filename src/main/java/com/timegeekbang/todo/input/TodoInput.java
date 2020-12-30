@@ -1,43 +1,35 @@
 package com.timegeekbang.todo.input;
 
 import com.timegeekbang.todo.utils.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class TodoInput {
+public abstract class TodoInput {
 
-    private String input;
+  public List<String> getItems() {
+    FileUtils fileUtils = new FileUtils();
+    List<String> strings = fileUtils.readFile("liudaming");
+    List<String> collect = strings.stream().filter(s -> StringUtils.isNotBlank(s)).collect(Collectors.toList());
+    return collect;
+  }
 
-    private List<String> items = new ArrayList<>();
-
-    public TodoInput(String input) {
-        this.input = input;
+  public String getIndex() {
+    if (CollectionUtils.isEmpty(getItems())) {
+      return "1";
+    } else {
+      return String.valueOf(getItems().size() + 1);
     }
+  }
 
-    public String getItem() {
-        FileUtils fileUtils = new FileUtils();
-        this.items = fileUtils.readFile("liudaming");
-        if (input.indexOf("todo add") >= 0) {
-            String index = getIndex();
-            String item = index + input.replaceAll("todo add ", "");
-            items.add(item);
-            fileUtils.writeFile("liudaming",item);
-        }
-        if (!CollectionUtils.isEmpty(items)) {
-            return items.get(items.size() - 1);
-        } else {
-            return "请输入有效的指令";
-        }
+  public String showItems() {
+    List<String> items = this.getItems();
+    //默认过滤
+    items = items.stream().filter(s -> !s.contains("<done>")).collect(Collectors.toList());
+    return "清单列表为:\r\n" + StringUtils.join(items, "\r\n");
+  }
 
-    }
 
-    private String getIndex() {
-        if (CollectionUtils.isEmpty(items)) {
-            return "1.";
-        } else {
-            return items.size()+1 + ".";
-        }
-    }
 }
