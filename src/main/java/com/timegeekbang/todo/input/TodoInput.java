@@ -11,9 +11,8 @@ public abstract class TodoInput {
 
   public List<String> getItems() {
     FileUtils fileUtils = new FileUtils();
-    List<String> strings = fileUtils.readFile("liudaming");
-    List<String> collect = strings.stream().filter(s -> StringUtils.isNotBlank(s)).collect(Collectors.toList());
-    return collect;
+    List<String> strings = fileUtils.readFile();
+    return strings.stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
   }
 
   public String getIndex() {
@@ -28,7 +27,7 @@ public abstract class TodoInput {
     List<String> items = this.getItems();
     //默认过滤
     items = items.stream().filter(s -> !s.contains("<done>")).collect(Collectors.toList());
-    return "清单列表为:\r\n" + StringUtils.join(items, "\r\n");
+    return "清单列表为:\r\n" + StringUtils.join(items, "\r\n")+"\r\nTotal:"+items.size()+" items";
   }
 
 

@@ -1,5 +1,7 @@
 package com.timegeekbang.todo.utils;
 
+import com.timegeekbang.todo.user.UserContext;
+
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -8,14 +10,16 @@ import java.util.List;
 
 public class FileUtils {
 
-  public void createFile(String fileName) throws IOException {
+  public void createFile() throws IOException {
+    String fileName = UserContext.getUserID();
     FileOutputStream fos = new FileOutputStream(fileName, true);
     FileChannel channel = fos.getChannel();
     channel.close();
     fos.close();
   }
 
-  public List<String> readFile(String fileName) {
+  public List<String> readFile() {
+    String fileName = UserContext.getUserID();
     File file = new File(fileName);
     List<String> list = new ArrayList<>();
     InputStreamReader reader = null;
@@ -39,14 +43,15 @@ public class FileUtils {
     return list;
   }
 
-  public List<String> writeFile(String fileName, String content) {
+  public List<String> writeFile(String content) {
+    String fileName = UserContext.getUserID();
     try {
       content = content + "\r\n";
       FileOutputStream fos = null;
       fos = new FileOutputStream(fileName, true);
       FileChannel channel = fos.getChannel();
-      ByteBuffer buf = ByteBuffer.wrap(content.toString().getBytes());
-      buf.put(content.toString().getBytes());
+      ByteBuffer buf = ByteBuffer.wrap(content.getBytes());
+      buf.put(content.getBytes());
       buf.flip();
       channel.write(buf);
       channel.close();
@@ -54,12 +59,13 @@ public class FileUtils {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    return readFile(fileName);
+    return readFile();
   }
 
-  public List<String> writeFileByList(String fileName, List<String> newStrings) {
+  public List<String> writeFileByList(List<String> newStrings) {
+    String fileName = UserContext.getUserID();
     try {
-      deleteFile(fileName);
+      deleteFile();
       FileOutputStream fos = new FileOutputStream(fileName, true);
       FileChannel channel = fos.getChannel();
       StringBuffer content = new StringBuffer();
@@ -75,10 +81,11 @@ public class FileUtils {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    return readFile(fileName);
+    return readFile();
   }
 
-  public boolean deleteFile(String fileName) {
+  public boolean deleteFile() {
+    String fileName = UserContext.getUserID();
     File file = new File(fileName);
     // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
     if (file.exists() && file.isFile()) {
@@ -95,7 +102,8 @@ public class FileUtils {
     }
   }
 
-  public Boolean updateFile(String fileName, String oldStr, String newStr) {
+  public Boolean updateFile(String oldStr, String newStr) {
+    String fileName = UserContext.getUserID();
     File fileText = new File(fileName);
     BufferedReader br = null;
     PrintWriter pw = null;

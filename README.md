@@ -46,5 +46,8 @@ todo add 明天记得早点起床
 todo done 1
 todo list -all
 
+todo-phase-2
+加入用户登录功能
+则对应的本地文件用用户名和id来命名。登录之后，将用户信息存储到本地线程中
 
 

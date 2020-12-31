@@ -17,7 +17,7 @@ public class TodoAddInput extends TodoInput {
       String index = getIndex();
       addStr = input.replaceAll("todo add ", "");
       String item = index + "." + addStr;
-      fileUtils.writeFile("liudaming", item);
+      fileUtils.writeFile(item);
     }
     String returnMessage = addStr + "添加成功";
     System.out.println(returnMessage);
